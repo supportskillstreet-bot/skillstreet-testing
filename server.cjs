@@ -4,6 +4,8 @@ const multer = require('multer');
 const B2 = require('backblaze-b2');
 const crypto = require('crypto');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY || 'sk_test_your_stripe_secret_key');
+const { addDoc, collection, updateDoc, doc, getDocs, query, where } = require('firebase-admin/firestore');
+const { addDoc, collection, updateDoc, doc, getDocs, query, where } = require('firebase-admin/firestore');
 
 // Firebase Admin - optional for now, using mock for file uploads
 let db = null;
@@ -23,13 +25,18 @@ const app = express();
 const upload = multer({ storage: multer.memoryStorage() });
 
 // Backblaze B2 Configuration
+if (!process.env.B2_KEY_ID || !process.env.B2_KEY_SECRET) {
+  console.error('ERROR: B2_KEY_ID and B2_KEY_SECRET environment variables are required!');
+  process.exit(1);
+}
+
 const b2 = new B2({
-  applicationKeyId: process.env.B2_KEY_ID || '005b615bee76ed80000000003',
-  applicationKey: process.env.B2_KEY_SECRET || 'K005K1EPsyXa55e/T9v1fukdGuZPVzA',
+  applicationKeyId: process.env.B2_KEY_ID,
+  applicationKey: process.env.B2_KEY_SECRET,
 });
 
-const BUCKET_ID = process.env.B2_BUCKET_ID || 'YOUR_BUCKET_ID_HERE';
-const BUCKET_NAME = process.env.B2_BUCKET_NAME || 'YOUR_BUCKET_NAME_HERE';
+const BUCKET_ID = process.env.B2_BUCKET_ID;
+const BUCKET_NAME = process.env.B2_BUCKET_NAME;
 
 // Platform commission rate (10%)
 const COMMISSION_RATE = 10;
@@ -132,7 +139,7 @@ app.get('/api/download/:fileId', async (req, res) => {
     
     // Generate download authorization
     const downloadAuth = await b2.getDownloadAuthorization({
-      bucketId: BUCKET_ID,
+      bucketId: '6be6c1752bce5e5796ee0d18',
       fileNamePrefix: fileInfo.data.fileName,
       validDurationInSeconds: 3600, // 1 hour
     });
