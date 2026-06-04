@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useState, useCallback } from 'react';
-import { Link } from 'react-router-dom';
 
 import { collection, addDoc, query, where, orderBy, onSnapshot, updateDoc, deleteDoc, doc, increment } from 'firebase/firestore';
 import { db } from '../firebase.js';
+
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://web-production-90654.up.railway.app';
 
 const CATEGORY_LABELS = {
   design: 'Design',
@@ -120,8 +121,6 @@ export default function Student({ user }) {
   const [editSelectedFiles, setEditSelectedFiles] = useState([]);
   const [savingEdit, setSavingEdit] = useState(false);
   const [deletingSubmissionId, setDeletingSubmissionId] = useState('');
-  const [agreedToTerms, setAgreedToTerms] = useState(false);
-  const [editAgreedToTerms, setEditAgreedToTerms] = useState(false);
   const [deletingAllSubmissions, setDeletingAllSubmissions] = useState(false);
   const [hiddenSubmissionIds, setHiddenSubmissionIds] = useState(() => readHiddenSubmissionIds(user.uid));
   const [submissionBackups, setSubmissionBackups] = useState(() => readSubmissionBackups(user.uid));
@@ -204,7 +203,7 @@ export default function Student({ user }) {
     if (downloadUrls[fileId]) return downloadUrls[fileId];
 
     try {
-      const resp = await fetch(`http://localhost:3001/api/download/${fileId}`);
+      const resp = await fetch(`${API_BASE_URL}/api/download/${fileId}`);
       if (!resp.ok) {
         let err = null;
         try {
@@ -231,12 +230,10 @@ export default function Student({ user }) {
     setLinkValue('');
     setTextValue('');
     setSelectedFiles([]);
-    setAgreedToTerms(false);
   };
 
   const closeTaskModal = () => {
     setActiveTask(null);
-    setAgreedToTerms(false);
   };
 
   const handleFileSelect = async (event) => {
@@ -262,7 +259,7 @@ export default function Student({ user }) {
         const formData = new FormData();
         formData.append('file', file);
 
-        const response = await fetch('http://localhost:3001/api/upload', {
+        const response = await fetch(`${API_BASE_URL}/api/upload`, {
           method: 'POST',
           body: formData,
         });
@@ -325,7 +322,7 @@ export default function Student({ user }) {
         const formData = new FormData();
         formData.append('file', file);
 
-        const response = await fetch('http://localhost:3001/api/upload', {
+        const response = await fetch(`${API_BASE_URL}/api/upload`, {
           method: 'POST',
           body: formData,
         });
@@ -375,7 +372,6 @@ export default function Student({ user }) {
     setEditLinkValue(submission.url || '');
     setEditTextValue(submission.text || '');
     setEditSelectedFiles(submission.files || []);
-    setEditAgreedToTerms(false);
   };
 
   const closeEditSubmission = () => {
@@ -384,7 +380,6 @@ export default function Student({ user }) {
     setEditLinkValue('');
     setEditTextValue('');
     setEditSelectedFiles([]);
-    setEditAgreedToTerms(false);
   };
 
   const openViewSubmission = (submission) => {
@@ -400,10 +395,6 @@ export default function Student({ user }) {
     if (!activeTask) return;
     if (!studentName.trim()) {
       showToast('Please enter your name.');
-      return;
-    }
-    if (!agreedToTerms) {
-      showToast('Please agree to the Terms and Conditions.');
       return;
     }
     if (activeSubmitTab === 'link' && !linkValue.trim()) {
@@ -488,10 +479,6 @@ export default function Student({ user }) {
 
   const updateSubmissionEntry = async () => {
     if (!editingSubmission) return;
-    if (!editAgreedToTerms) {
-      showToast('Please agree to the Terms and Conditions.');
-      return;
-    }
     if (editSubmitTab === 'link' && !editLinkValue.trim()) {
       showToast('Please provide a submission link.');
       return;
@@ -846,7 +833,7 @@ export default function Student({ user }) {
 
       {viewingTaskDescription ? (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4 py-8" onClick={(event) => event.target === event.currentTarget && setViewingTaskDescription(null)}>
-          <div className="max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-[2rem] bg-blue-900/95 border border-blue-800/60 p-6 sm:p-8 shadow-2xl">
+          <div className="max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-[2rem] bg-blue-900/95 border border-blue-800/60 p-8 shadow-2xl">
             <div className="flex items-start justify-between gap-4">
               <div>
                 <p className="text-sm uppercase tracking-[0.3em] text-orange-300">Task description</p>
@@ -869,7 +856,7 @@ export default function Student({ user }) {
 
       {activeTask ? (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4 py-8" onClick={(event) => event.target === event.currentTarget && closeTaskModal()}>
-          <div className="w-full max-w-3xl rounded-[2rem] bg-blue-900/95 border border-blue-800/60 backdrop-blur-sm p-6 sm:p-8 shadow-2xl">
+          <div className="w-full max-w-3xl rounded-[2rem] bg-blue-900/95 border border-blue-800/60 backdrop-blur-sm p-8 shadow-2xl">
             <div className="flex items-start justify-between gap-4">
               <div>
                 <p className="text-sm uppercase tracking-[0.3em] text-orange-300">Submit work</p>
@@ -900,7 +887,7 @@ export default function Student({ user }) {
 <input
                   value={studentName}
                   onChange={(e) => setStudentName(e.target.value)}
-                  className="w-full rounded-2xl border-2 border-blue-800/60 bg-blue-900/50 px-4 py-3 text-white outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-400/20"
+                  className="w-full rounded-2xl border-2 border-black bg-blue-900/50 px-4 py-3 text-white outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-400/20"
                   placeholder="Your full name"
                   type="text"
                 />
@@ -924,7 +911,7 @@ export default function Student({ user }) {
                     value={linkValue}
                     onChange={(e) => setLinkValue(e.target.value)}
                     placeholder="Paste a project link or portfolio URL"
-                    className="w-full rounded-2xl border-2 border-blue-800/60 bg-blue-900/50 px-4 py-3 text-white outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-400/20"
+                    className="w-full rounded-2xl border-2 border-black bg-blue-900/50 px-4 py-3 text-white outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-400/20"
                     type="url"
                   />
                 </div>
@@ -937,14 +924,14 @@ export default function Student({ user }) {
                     value={textValue}
                     onChange={(e) => setTextValue(e.target.value)}
                     placeholder="Describe your work and what you submitted."
-                    className="w-full rounded-2xl border-2 border-blue-800/60 bg-blue-900/50 px-4 py-3 text-white outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-400/20"
+                    className="w-full rounded-2xl border-2 border-black bg-blue-900/50 px-4 py-3 text-white outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-400/20"
                   />
                 </div>
               )}
               {activeSubmitTab === 'file' && (
                 <div className="space-y-3">
                   <label className="block text-sm font-medium text-slate-300">Upload files</label>
-<label className="inline-flex w-full cursor-pointer items-center justify-center rounded-2xl border-2 border-blue-800/60 border-dashed bg-blue-900/30 px-4 py-6 text-center text-slate-300 transition hover:border-orange-400 hover:bg-blue-900/50">
+<label className="inline-flex w-full cursor-pointer items-center justify-center rounded-2xl border-2 border-black border-dashed border-blue-800/60 bg-blue-900/30 px-4 py-6 text-center text-slate-300 transition hover:border-orange-400 hover:bg-blue-900/50">
                     <input type="file" multiple className="sr-only" onChange={handleFileSelect} />
                     Select files to upload
                   </label>
@@ -961,17 +948,6 @@ export default function Student({ user }) {
                   </div>
                 </div>
               )}
-              <label className="flex items-start gap-3 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={agreedToTerms}
-                  onChange={(e) => setAgreedToTerms(e.target.checked)}
-                  className="mt-1 h-4 w-4 rounded border-blue-800/60 bg-blue-900/50 text-orange-400 focus:ring-orange-400"
-                />
-                <span className="text-sm text-slate-300">
-                  I agree to the <Link to="/terms" className="text-orange-300 hover:text-orange-400 underline">Terms and Conditions</Link> and <Link to="/privacy" className="text-orange-300 hover:text-orange-400 underline">Privacy Policy</Link>
-                </span>
-              </label>
               <div className="flex flex-wrap gap-3">
                 <button
                   type="button"
@@ -984,7 +960,7 @@ export default function Student({ user }) {
                 <button
                   type="button"
                   onClick={closeTaskModal}
-                  className="rounded-2xl border border-blue-800/60 bg-blue-900 px-5 py-3 text-sm text-white transition hover:border-orange-400"
+                  className="rounded-2xl border border-slate-700 bg-slate-900 px-5 py-3 text-sm text-slate-300 transition hover:border-orange-400"
                 >
                   Cancel
                 </button>
@@ -996,7 +972,7 @@ export default function Student({ user }) {
 
       {editingSubmission ? (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4 py-8" onClick={(event) => event.target === event.currentTarget && closeEditSubmission()}>
-          <div className="max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-[2rem] border border-blue-800/60 bg-blue-950/95 p-6 sm:p-8 shadow-2xl shadow-black/40">
+          <div className="max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-[2rem] border border-slate-700 bg-slate-950/95 p-8 shadow-2xl shadow-black/40">
             <div className="flex items-start justify-between gap-4">
               <div>
                 <p className="text-sm uppercase tracking-[0.3em] text-orange-300">Edit submission</p>
@@ -1013,7 +989,7 @@ export default function Student({ user }) {
                     key={type}
                     type="button"
                     onClick={() => setEditSubmitTab(type)}
-                    className={`rounded-full px-4 py-2 text-sm font-semibold transition ${editSubmitTab === type ? 'bg-orange-500 text-slate-950' : 'bg-blue-900/60 border border-blue-800/60 text-white hover:bg-blue-800'}`}
+                    className={`rounded-full px-4 py-2 text-sm font-semibold transition ${editSubmitTab === type ? 'bg-orange-500 text-slate-950' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'}`}
                   >
                     {type === 'link' ? 'Link' : type === 'text' ? 'Text' : 'File'}
                   </button>
@@ -1027,7 +1003,7 @@ export default function Student({ user }) {
                     value={editLinkValue}
                     onChange={(e) => setEditLinkValue(e.target.value)}
                     placeholder="Paste a project link or portfolio URL"
-                    className="w-full rounded-2xl border-2 border-blue-800/60 bg-blue-900/50 px-4 py-3 text-white outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-400/20"
+                    className="w-full rounded-2xl border border-slate-700 bg-slate-900 px-4 py-3 text-slate-100 outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-400/20"
                     type="url"
                   />
                 </div>
@@ -1041,7 +1017,7 @@ export default function Student({ user }) {
                     value={editTextValue}
                     onChange={(e) => setEditTextValue(e.target.value)}
                     placeholder="Describe your work and what you submitted."
-                    className="w-full rounded-2xl border-2 border-blue-800/60 bg-blue-900/50 px-4 py-3 text-white outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-400/20"
+                    className="w-full rounded-2xl border border-slate-700 bg-slate-900 px-4 py-3 text-slate-100 outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-400/20"
                   />
                 </div>
               )}
@@ -1049,14 +1025,14 @@ export default function Student({ user }) {
               {editSubmitTab === 'file' && (
                 <div className="space-y-3">
                   <label className="block text-sm font-medium text-slate-300">Submitted files</label>
-                  <label className="inline-flex w-full cursor-pointer items-center justify-center rounded-2xl border-2 border-blue-800/60 border-dashed bg-blue-900/30 px-4 py-6 text-center text-slate-300 transition hover:border-orange-400 hover:bg-blue-900/50">
+                  <label className="inline-flex w-full cursor-pointer items-center justify-center rounded-2xl border border-dashed border-slate-700 bg-slate-950 px-4 py-6 text-center text-slate-400 transition hover:border-orange-400 hover:bg-slate-900">
                     <input type="file" multiple className="sr-only" onChange={handleEditFileSelect} />
                     Add files
                   </label>
                   <p className="text-xs text-slate-400">File size must not exceed 20 MB.</p>
                   <div className="space-y-2">
                     {editSelectedFiles.map((file, index) => (
-                      <div key={`${file.name}-${index}`} className="flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-blue-900/50 px-4 py-3 text-sm text-white">
+                      <div key={`${file.name}-${index}`} className="flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-slate-900 px-4 py-3 text-sm text-slate-300">
                         <span className="break-all">{file.name}</span>
                         <div className="flex gap-3">
                           {file.dataUrl ? (
@@ -1073,17 +1049,6 @@ export default function Student({ user }) {
                   </div>
                 </div>
               )}
-              <label className="flex items-start gap-3 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={editAgreedToTerms}
-                  onChange={(e) => setEditAgreedToTerms(e.target.checked)}
-                  className="mt-1 h-4 w-4 rounded border-blue-800/60 bg-blue-900/50 text-orange-400 focus:ring-orange-400"
-                />
-                <span className="text-sm text-slate-300">
-                  I agree to the <Link to="/terms" className="text-orange-300 hover:text-orange-400 underline">Terms and Conditions</Link> and <Link to="/privacy" className="text-orange-300 hover:text-orange-400 underline">Privacy Policy</Link>
-                </span>
-              </label>
 
               <div className="flex flex-wrap gap-3">
                 <button
@@ -1097,7 +1062,7 @@ export default function Student({ user }) {
                 <button
                   type="button"
                   onClick={closeEditSubmission}
-                  className="rounded-2xl border border-blue-800/60 bg-blue-900 px-5 py-3 text-sm text-white transition hover:border-orange-400"
+                  className="rounded-2xl border border-slate-700 bg-slate-900 px-5 py-3 text-sm text-slate-300 transition hover:border-orange-400"
                 >
                   Cancel
                 </button>
@@ -1109,7 +1074,7 @@ export default function Student({ user }) {
 
       {viewingSubmission ? (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4 py-8" onClick={(event) => event.target === event.currentTarget && closeViewSubmission()}>
-          <div className="max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-[2rem] border border-blue-800/60 bg-blue-950/95 p-6 sm:p-8 shadow-2xl shadow-black/40">
+          <div className="max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-[2rem] border border-slate-700 bg-slate-950/95 p-8 shadow-2xl shadow-black/40">
             <div className="flex items-start justify-between gap-4">
               <div>
                 <p className="text-sm uppercase tracking-[0.3em] text-orange-300">View submission</p>
@@ -1119,7 +1084,7 @@ export default function Student({ user }) {
               <button type="button" onClick={closeViewSubmission} className="text-3xl text-slate-400">x</button>
             </div>
 
-            <div className="mt-6 rounded-[1.5rem] bg-blue-900/90 p-5 text-sm text-slate-300">
+            <div className="mt-6 rounded-[1.5rem] bg-slate-900/90 p-5 text-sm text-slate-300">
               {viewingSubmission.type === 'link' && (
                 <a href={viewingSubmission.url} target="_blank" rel="noreferrer" className="break-all text-orange-300 underline hover:text-orange-400">
                   {viewingSubmission.url}
@@ -1135,7 +1100,7 @@ export default function Student({ user }) {
                   {viewingSubmission.files?.length > 0 ? (
 
                     viewingSubmission.files.map((file, index) => (
-                      <div key={`${file.name}-${index}`} className="flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-blue-950/80 p-4">
+                      <div key={`${file.name}-${index}`} className="flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-slate-950/80 p-4">
                         <span className="break-all">{file.name}</span>
                         {(() => {
                           const url = file.dataUrl || downloadUrls[file.fileId];
@@ -1198,7 +1163,7 @@ export default function Student({ user }) {
               <button
                 type="button"
                 onClick={closeViewSubmission}
-                className="rounded-2xl border border-blue-800/60 bg-blue-900 px-5 py-3 text-sm text-white transition hover:border-orange-400"
+                className="rounded-2xl border border-slate-700 bg-slate-900 px-5 py-3 text-sm text-slate-300 transition hover:border-orange-400"
               >
                 Close
               </button>
