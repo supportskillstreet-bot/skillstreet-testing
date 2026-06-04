@@ -2,6 +2,8 @@ import { useEffect, useMemo, useState } from 'react';
 import { collection, addDoc, query, where, onSnapshot, serverTimestamp, doc, getDoc, getDocs, updateDoc, deleteDoc } from 'firebase/firestore';
 import { db } from '../firebase.js';
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://web-production-90654.up.railway.app';
+
 const SKILLS_LIST = [
   'Figma', 'React', 'Node.js', 'Python', 'Canva', 'Writing', 'SEO', 'Sales', 'UI/UX', 'Data Analysis', 'Video Editing', 'Social Media'
 ];
@@ -438,7 +440,7 @@ export default function Company({ user }) {
         const formData = new FormData();
         formData.append('file', file);
 
-        const response = await fetch('http://localhost:3001/api/upload', {
+        const response = await fetch(`${API_BASE_URL}/api/upload`, {
           method: 'POST',
           body: formData,
         });
@@ -958,7 +960,7 @@ export default function Company({ user }) {
                                     type="button"
                                     onClick={async () => {
                                       try {
-                                        const response = await fetch(`http://localhost:3001/api/download/${file.fileId}`);
+                                        const response = await fetch(`${API_BASE_URL}/api/download/${file.fileId}`);
                                         const data = await response.json();
                                         window.open(data.downloadUrl, '_blank');
                                       } catch (error) {
