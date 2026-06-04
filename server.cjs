@@ -5,7 +5,6 @@ const B2 = require('backblaze-b2');
 const crypto = require('crypto');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY || 'sk_test_your_stripe_secret_key');
 const { addDoc, collection, updateDoc, doc, getDocs, query, where } = require('firebase-admin/firestore');
-const { addDoc, collection, updateDoc, doc, getDocs, query, where } = require('firebase-admin/firestore');
 
 // Firebase Admin - optional for now, using mock for file uploads
 let db = null;
@@ -37,6 +36,11 @@ const b2 = new B2({
 
 const BUCKET_ID = process.env.B2_BUCKET_ID;
 const BUCKET_NAME = process.env.B2_BUCKET_NAME;
+
+if (!BUCKET_ID || !BUCKET_NAME) {
+  console.error('ERROR: B2_BUCKET_ID and B2_BUCKET_NAME environment variables are required!');
+  process.exit(1);
+}
 
 // Platform commission rate (10%)
 const COMMISSION_RATE = 10;
