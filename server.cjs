@@ -8,16 +8,24 @@ const { addDoc, collection, updateDoc, doc, getDocs, query, where } = require('f
 
 // Firebase Admin - optional for now, using mock for file uploads
 let db = null;
+let admin = null;
 try {
-  const admin = require('firebase-admin');
+  admin = require('firebase-admin');
   const serviceAccount = require('./firebase-service-account.json');
-  admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
-    projectId: 'skillstreetofficial'
-  });
+  
+  // Check if Firebase is already initialized
+  if (admin.apps.length === 0) {
+    admin.initializeApp({
+      credential: admin.credential.cert(serviceAccount),
+      projectId: 'skillstreetofficial'
+    });
+  }
+  
   db = admin.firestore();
+  console.log('Firebase Admin initialized successfully');
 } catch (error) {
-  console.log('Firebase Admin not configured - payment features will be limited');
+  console.warn('Firebase Admin not configured - payment features will be limited:', error.message);
+  console.warn('Ensure firebase-service-account.json exists and environment variables are set');
 }
 
 const app = express();
@@ -50,6 +58,32 @@ app.use(cors({
   methods: ['GET', 'POST', 'DELETE'],
 }));
 app.use(express.json());
+
+// Health check endpoint
+app.get('/api/health', (req, res) => {
+  res.json({
+    status: 'ok',
+    message: 'Backend is running',
+    firebaseConfigured: db !== null,
+    timestamp: new Date().toISOString()
+  });
+});
+
+// Root endpoint
+app.get('/', (req, res) => {
+  res.json({
+    message: 'Skill Street Backend API',
+    version: '1.0.0',
+    endpoints: {
+      health: '/api/health',
+      upload: 'POST /api/upload',
+      download: 'GET /api/download/:fileId',
+      delete: 'DELETE /api/delete/:fileId',
+      payments: '/api/payments/*',
+      approvals: '/api/approvals/*'
+    }
+  });
+});
 
 // Initialize B2 authorization
 let b2Authorized = false;
