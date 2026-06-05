@@ -32,14 +32,14 @@ const app = express();
 const upload = multer({ storage: multer.memoryStorage() });
 
 // Backblaze B2 Configuration
-if (!process.env.B2_KEY_ID || !process.env.B2_KEY_SECRET) {
-  console.error('ERROR: B2_KEY_ID and B2_KEY_SECRET environment variables are required!');
+if (!process.env.B2_KEY_ID || !process.env.B2_APPLICATION_KEY) {
+  console.error('ERROR: B2_KEY_ID and B2_APPLICATION_KEY environment variables are required!');
   process.exit(1);
 }
 
 const b2 = new B2({
   applicationKeyId: process.env.B2_KEY_ID,
-  applicationKey: process.env.B2_KEY_SECRET,
+  applicationKey: process.env.B2_APPLICATION_KEY,
 });
 
 const BUCKET_ID = process.env.B2_BUCKET_ID;
