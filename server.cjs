@@ -98,7 +98,18 @@ async function authorizeB2() {
 
     console.log('B2 Authorized successfully');
   } catch (error) {
-    console.error('B2 Authorization error:', error.message);
+    console.error('B2 Authorization error:', error && error.message);
+    try {
+      // Log additional error details returned by the B2 client (if available)
+      if (error && error.response && error.response.data) {
+        console.error('B2 response data:', JSON.stringify(error.response.data));
+      }
+      if (error && error.statusCode) {
+        console.error('B2 statusCode:', error.statusCode);
+      }
+    } catch (logErr) {
+      console.error('Failed to stringify B2 error response:', logErr && logErr.message);
+    }
 
     b2Authorized = false;
   }
@@ -120,19 +131,41 @@ app.post('/api/upload', upload.single('file'), async (req, res) => {
       await authorizeB2();
     }
 
-    const uploadResponse = await b2.getUploadUrl({
+    // Request an upload URL + token from B2
+    let uploadResponse = await b2.getUploadUrl({
       bucketId: BUCKET_ID,
     });
 
     const fileName = `${Date.now()}-${req.file.originalname}`;
 
-    const uploadResult = await b2.uploadFile({
-      uploadUrl: uploadResponse.data.uploadUrl,
-      uploadAuthToken: uploadResponse.data.authorizationToken,
-      fileName: fileName,
-      data: req.file.buffer,
-      contentType: req.file.mimetype,
-    });
+    // Try upload once, but if B2 rejects the auth token, re-authorize and retry once
+    let uploadResult;
+    try {
+      uploadResult = await b2.uploadFile({
+        uploadUrl: uploadResponse.data.uploadUrl,
+        uploadAuthToken: uploadResponse.data.authorizationToken,
+        fileName: fileName,
+        data: req.file.buffer,
+        contentType: req.file.mimetype,
+      });
+    } catch (err) {
+      console.warn('Upload attempt failed, checking for auth error:', err && err.message);
+      const message = (err && err.message) || '';
+      if (message.toLowerCase().includes('invalid authorization token') || (err && err.statusCode === 401)) {
+        console.log('Re-authorizing B2 and retrying upload...');
+        await authorizeB2();
+        uploadResponse = await b2.getUploadUrl({ bucketId: BUCKET_ID });
+        uploadResult = await b2.uploadFile({
+          uploadUrl: uploadResponse.data.uploadUrl,
+          uploadAuthToken: uploadResponse.data.authorizationToken,
+          fileName: fileName,
+          data: req.file.buffer,
+          contentType: req.file.mimetype,
+        });
+      } else {
+        throw err;
+      }
+    }
 
     const fileUrl = `https://f005.backblazeb2.com/file/${BUCKET_NAME}/${fileName}`;
 
@@ -146,11 +179,24 @@ app.post('/api/upload', upload.single('file'), async (req, res) => {
 
   } catch (error) {
 
-    console.error('UPLOAD ERROR:', error);
+    console.error('UPLOAD ERROR:', error && (error.message || error));
+    try {
+      if (error && error.response && error.response.data) {
+        console.error('B2 upload response data:', JSON.stringify(error.response.data));
+      }
+      if (error && error.statusCode) {
+        console.error('B2 upload statusCode:', error.statusCode);
+      }
+      if (error && error.stack) {
+        console.error('Stack:', error.stack);
+      }
+    } catch (logErr) {
+      console.error('Failed to log upload error details:', logErr && logErr.message);
+    }
 
     res.status(500).json({
       error: 'Upload failed',
-      details: error.message,
+      details: error && error.message,
     });
 
   }
