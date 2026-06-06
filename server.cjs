@@ -223,7 +223,7 @@ app.get('/api/download/:fileId', async (req, res) => {
     
     // Generate download authorization
     const downloadAuth = await b2.getDownloadAuthorization({
-      bucketId: '6be6c1752bce5e5796ee0d18',
+      bucketId: BUCKET_ID,
       fileNamePrefix: fileInfo.data.fileName,
       validDurationInSeconds: 3600, // 1 hour
     });
