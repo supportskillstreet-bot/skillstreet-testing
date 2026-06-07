@@ -706,7 +706,7 @@ export default function Student({ user }) {
                 <button
                   key={category}
                   type="button"
-                  className={`rounded-full px-3 sm:px-4 py-2 text-xs sm:text-sm font-semibold transition ${currentFilter === category ? 'bg-orange-500 text-slate-950' : 'bg-blue-900/60 border bor[...]
+                  className={`rounded-full px-3 sm:px-4 py-2 text-xs sm:text-sm font-semibold transition ${currentFilter === category ? 'bg-orange-500 text-slate-950' : 'bg-blue-900/60 border border-blue-800/60 text-white hover:bg-blue-800'}`}
                   onClick={() => setCurrentFilter(category)}
                 >
                   {category}
@@ -729,7 +729,7 @@ export default function Student({ user }) {
                   <div className="flex flex-wrap items-center justify-between gap-3">
                     <span className="rounded-full bg-blue-900/60 border border-blue-800/60 px-3 py-1 text-xs uppercase tracking-[0.16em] text-white">{task.categoryLabel}</span>
                     <span
-                      className={`rounded-full px-3 py-1 text-xs ${task.urgent ? 'bg-orange-500 text-slate-950' : 'bg-blue-900/60 border border-blue-800/60 text-white'} group-hover:bg-orange-500 [...]
+                      className={`rounded-full px-3 py-1 text-xs ${task.urgent ? 'bg-orange-500 text-slate-950' : 'bg-blue-900/60 border border-blue-800/60 text-white'} group-hover:bg-orange-500 group-hover:text-slate-950`}
                     >
                       {task.deadline}
                     </span>
@@ -773,7 +773,7 @@ export default function Student({ user }) {
                   type="button"
                   disabled={deletingAllSubmissions}
                   onClick={deleteAllSubmissions}
-                  className="rounded-2xl border border-red-500/40 bg-red-500/10 px-3 sm:px-4 py-2 text-xs sm:text-sm font-semibold text-red-200 transition hover:bg-red-500/20 disabled:cursor-not-[...]
+                  className="rounded-2xl border border-red-500/40 bg-red-500/10 px-3 sm:px-4 py-2 text-xs sm:text-sm font-semibold text-red-200 transition hover:bg-red-500/20 disabled:cursor-not-allowed disabled:opacity-70"
                 >
                   {deletingAllSubmissions ? 'Deleting all...' : 'Delete all'}
                 </button>
@@ -789,7 +789,7 @@ export default function Student({ user }) {
                   <div className="flex flex-wrap items-center justify-between gap-3">
                     <div>
                       <div className="text-sm text-slate-300">{submission.taskTitle}</div>
-                      <div className="mt-1 text-base sm:text-lg font-semibold">{submission.type === 'link' ? 'Link submission' : submission.type === 'text' ? 'Text submission' : 'File submission'[...]
+                      <div className="mt-1 text-base sm:text-lg font-semibold">{submission.type === 'link' ? 'Link submission' : submission.type === 'text' ? 'Text submission' : 'File submission'}</div>
                     </div>
                     <div className="rounded-full bg-blue-900/60 border border-blue-800/60 px-2 sm:px-3 py-1 sm:py-2 text-xs text-white">{formatSubmissionDate(submission)}</div>
                   </div>
@@ -819,7 +819,7 @@ export default function Student({ user }) {
                       type="button"
                       disabled={deletingSubmissionId === submission.id}
                       onClick={() => deleteSubmissionEntry(submission)}
-                      className="rounded-2xl border border-red-500/40 bg-red-500/10 px-3 sm:px-4 py-2 text-xs sm:text-sm font-semibold text-red-200 transition hover:bg-red-500/20 disabled:cursor-[...]
+                      className="rounded-2xl border border-red-500/40 bg-red-500/10 px-3 sm:px-4 py-2 text-xs sm:text-sm font-semibold text-red-200 transition hover:bg-red-500/20 disabled:cursor-not-allowed disabled:opacity-70"
                     >
                       {deletingSubmissionId === submission.id ? 'Deleting...' : 'Delete'}
                     </button>
@@ -855,142 +855,131 @@ export default function Student({ user }) {
       ) : null}
 
       {activeTask ? (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4 py-4" onClick={(event) => event.target === event.currentTarget && closeTaskModal()}>
-          <div className="w-full max-w-3xl max-h-[90vh] rounded-[2rem] bg-blue-900/95 border border-blue-800/60 backdrop-blur-sm shadow-2xl flex flex-col">
-            <div className="flex items-start justify-between gap-4 p-6 sm:p-8 border-b border-blue-800/40 flex-shrink-0">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4 py-8" onClick={(event) => event.target === event.currentTarget && closeTaskModal()}>
+          <div className="w-full max-w-3xl max-h-[calc(100vh-8rem)] overflow-y-auto rounded-[2rem] bg-blue-900/95 border border-blue-800/60 backdrop-blur-sm p-8 shadow-2xl">
+            <div className="flex items-start justify-between gap-4">
               <div>
                 <p className="text-sm uppercase tracking-[0.3em] text-orange-300">Submit work</p>
                 <h3 className="mt-3 text-2xl font-bold">{activeTask.title}</h3>
                 <p className="mt-2 text-sm text-slate-300">{activeTask.companyName} · {activeTask.categoryLabel}</p>
               </div>
-              <button type="button" onClick={closeTaskModal} className="text-3xl text-slate-300 flex-shrink-0">×</button>
+              <button type="button" onClick={closeTaskModal} className="text-3xl text-slate-300">×</button>
             </div>
-
-            <div className="flex-1 overflow-y-auto">
-              <div className="space-y-3 p-6 sm:p-8">
-                <div className="rounded-[1.5rem] bg-blue-900/60 border border-blue-800/60 p-4">
-                  <div className="grid gap-3 sm:grid-cols-3">
-                    <div className="rounded-2xl bg-blue-900/50 p-3 text-sm text-white">
-                      <div className="text-xs uppercase tracking-[0.2em]">Deadline</div>
-                      <div className="mt-1 text-white text-sm">{activeTask.deadline}</div>
-                    </div>
-                    <div className="rounded-2xl bg-blue-900/50 p-3 text-sm text-white">
-                      <div className="text-xs uppercase tracking-[0.2em]">Reward</div>
-                      <div className="mt-1 text-white text-sm">{activeTask.prize}</div>
-                    </div>
-                    <div className="rounded-2xl bg-blue-900/50 p-3 text-sm text-white">
-                      <div className="text-xs uppercase tracking-[0.2em]">Entries</div>
-                      <div className="mt-1 text-white text-sm">{activeTask.participants || 0}</div>
-                    </div>
-                  </div>
+            <div className="mt-6 rounded-[1.5rem] bg-blue-900/60 border border-blue-800/60 p-5">
+              <div className="grid gap-4 sm:grid-cols-3">
+                <div className="rounded-2xl bg-blue-900/50 p-4 text-sm text-white">
+                  <div className="text-xs uppercase tracking-[0.2em]">Deadline</div>
+                  <div className="mt-2 text-white">{activeTask.deadline}</div>
                 </div>
-
-                <div className="space-y-3">
-                  <div className="space-y-1">
-                    <label className="block text-sm font-medium text-slate-300">Your name</label>
-                    <input
-                      value={studentName}
-                      onChange={(e) => setStudentName(e.target.value)}
-                      className="w-full rounded-2xl border-2 border-black bg-blue-900/50 px-4 py-2 text-sm text-white outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-400/20"
-                      placeholder="Your full name"
-                      type="text"
-                    />
-                  </div>
-
-                  <div className="flex flex-wrap gap-2">
-                    {['link', 'text', 'file'].map((type) => (
-                      <button
-                        key={type}
-                        type="button"
-                        onClick={() => setActiveSubmitTab(type)}
-                        className={`rounded-full px-3 py-1 text-xs font-semibold transition ${activeSubmitTab === type ? 'bg-orange-500 text-slate-950' : 'bg-blue-900/60 border border-blue-800/60 text-white'}`}
-                      >
-                        {type === 'link' ? 'Link' : type === 'text' ? 'Text' : 'File'}
-                      </button>
-                    ))}
-                  </div>
-
-                  {activeSubmitTab === 'link' && (
-                    <div className="space-y-1">
-                      <label className="block text-sm font-medium text-slate-300">Submission link</label>
-                      <input
-                        value={linkValue}
-                        onChange={(e) => setLinkValue(e.target.value)}
-                        placeholder="Paste a project link or portfolio URL"
-                        className="w-full rounded-2xl border-2 border-black bg-blue-900/50 px-4 py-2 text-sm text-white outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-400/20"
-                        type="url"
-                      />
-                    </div>
-                  )}
-
-                  {activeSubmitTab === 'text' && (
-                    <div className="space-y-1">
-                      <label className="block text-sm font-medium text-slate-300">Submission details</label>
-                      <textarea
-                        rows={2}
-                        value={textValue}
-                        onChange={(e) => setTextValue(e.target.value)}
-                        placeholder="Describe your work and what you submitted."
-                        className="w-full rounded-2xl border-2 border-black bg-blue-900/50 px-4 py-2 text-sm text-white outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-400/20 resize-none"
-                      />
-                    </div>
-                  )}
-
-                  {activeSubmitTab === 'file' && (
-                    <div className="space-y-2">
-                      <label className="block text-sm font-medium text-slate-300">Upload files</label>
-                      <label className="inline-flex w-full cursor-pointer items-center justify-center rounded-2xl border-2 border-black border-dashed border-blue-800/60 bg-blue-900/30 px-4 py-4 text-center text-sm text-slate-400 hover:bg-blue-900/50">
-                        <input type="file" multiple className="sr-only" onChange={handleFileSelect} />
-                        Select files to upload
-                      </label>
-                      <p className="text-xs text-slate-400">Max 20 MB per file</p>
-                      <div className="space-y-2 max-h-20 overflow-y-auto">
-                        {selectedFiles.map((file, index) => (
-                          <div key={`${file.name}-${index}`} className="flex items-center justify-between rounded-2xl bg-blue-900/50 px-3 py-2 text-xs text-white">
-                            <span className="truncate">{file.name}</span>
-                            <button type="button" className="text-orange-300 hover:text-orange-200 flex-shrink-0 ml-2" onClick={() => removeFile(index)}>
-                              Remove
-                            </button>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
+                <div className="rounded-2xl bg-blue-900/50 p-4 text-sm text-white">
+                  <div className="text-xs uppercase tracking-[0.2em]">Reward</div>
+                  <div className="mt-2 text-white">{activeTask.prize}</div>
+                </div>
+                <div className="rounded-2xl bg-blue-900/50 p-4 text-sm text-white">
+                  <div className="text-xs uppercase tracking-[0.2em]">Current entries</div>
+                  <div className="mt-2 text-white">{activeTask.participants || 0}</div>
                 </div>
               </div>
             </div>
-
-            <div className="flex flex-wrap gap-3 p-6 sm:p-8 border-t border-blue-800/40 flex-shrink-0">
-              <button
-                type="button"
-                disabled={submitting}
-                onClick={submitTaskEntry}
-                className="rounded-2xl bg-orange-500 px-5 py-2 text-sm font-semibold text-slate-950 transition hover:bg-orange-400 disabled:cursor-not-allowed disabled:opacity-70"
-              >
-                {submitting ? 'Submitting...' : 'Submit'}
-              </button>
-              <button
-                type="button"
-                onClick={closeTaskModal}
-                className="rounded-2xl border border-slate-700 bg-slate-900 px-5 py-2 text-sm text-slate-300 transition hover:border-orange-400"
-              >
-                Cancel
-              </button>
+            <div className="mt-6 space-y-5">
+              <div className="space-y-2">
+                <label className="block text-sm font-medium text-slate-300">Your name</label>
+<input
+                  value={studentName}
+                  onChange={(e) => setStudentName(e.target.value)}
+                  className="w-full rounded-2xl border-2 border-black bg-blue-900/50 px-4 py-3 text-white outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-400/20"
+                  placeholder="Your full name"
+                  type="text"
+                />
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {['link', 'text', 'file'].map((type) => (
+                  <button
+                    key={type}
+                    type="button"
+                    onClick={() => setActiveSubmitTab(type)}
+                    className={`rounded-full px-4 py-2 text-sm font-semibold transition ${activeSubmitTab === type ? 'bg-orange-500 text-slate-950' : 'bg-blue-900/60 border border-blue-800/60 text-white hover:bg-blue-800'}`}
+                  >
+                    {type === 'link' ? 'Link' : type === 'text' ? 'Text' : 'File'}
+                  </button>
+                ))}
+              </div>
+              {activeSubmitTab === 'link' && (
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-slate-300">Submission link</label>
+<input
+                    value={linkValue}
+                    onChange={(e) => setLinkValue(e.target.value)}
+                    placeholder="Paste a project link or portfolio URL"
+                    className="w-full rounded-2xl border-2 border-black bg-blue-900/50 px-4 py-3 text-white outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-400/20"
+                    type="url"
+                  />
+                </div>
+              )}
+              {activeSubmitTab === 'text' && (
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-slate-300">Submission details</label>
+<textarea
+                    rows={4}
+                    value={textValue}
+                    onChange={(e) => setTextValue(e.target.value)}
+                    placeholder="Describe your work and what you submitted."
+                    className="w-full rounded-2xl border-2 border-black bg-blue-900/50 px-4 py-3 text-white outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-400/20"
+                  />
+                </div>
+              )}
+              {activeSubmitTab === 'file' && (
+                <div className="space-y-3">
+                  <label className="block text-sm font-medium text-slate-300">Upload files</label>
+<label className="inline-flex w-full cursor-pointer items-center justify-center rounded-2xl border-2 border-black border-dashed border-blue-800/60 bg-blue-900/30 px-4 py-6 text-center text-slate-300 transition hover:border-orange-400 hover:bg-blue-900/50">
+                    <input type="file" multiple className="sr-only" onChange={handleFileSelect} />
+                    Select files to upload
+                  </label>
+                  <p className="text-xs text-slate-400">File size must not exceed 20 MB.</p>
+                  <div className="space-y-2">
+                    {selectedFiles.map((file, index) => (
+                      <div key={`${file.name}-${index}`} className="flex items-center justify-between rounded-2xl bg-blue-900/50 px-4 py-3 text-sm text-white">
+                        <span>{file.name}</span>
+                        <button type="button" className="text-orange-300 hover:text-orange-200" onClick={() => removeFile(index)}>
+                          Remove
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+              <div className="flex flex-wrap gap-3">
+                <button
+                  type="button"
+                  disabled={submitting}
+                  onClick={submitTaskEntry}
+                  className="rounded-2xl bg-orange-500 px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-orange-400 disabled:cursor-not-allowed disabled:opacity-70"
+                >
+                  {submitting ? 'Submitting...' : 'Submit'}
+                </button>
+                <button
+                  type="button"
+                  onClick={closeTaskModal}
+                  className="rounded-2xl border border-slate-700 bg-slate-900 px-5 py-3 text-sm text-slate-300 transition hover:border-orange-400"
+                >
+                  Cancel
+                </button>
+              </div>
             </div>
           </div>
         </div>
       ) : null}
 
       {editingSubmission ? (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4 py-4" onClick={(event) => event.target === event.currentTarget && closeEditSubmission()}>
-          <div className="max-h-[80vh] w-full max-w-3xl overflow-y-auto rounded-[2rem] border border-slate-700 bg-slate-950/95 p-6 sm:p-8 shadow-2xl shadow-black/40">
-            <div className="flex items-start justify-between gap-4 sticky top-0 bg-slate-950/95 pb-4 -mx-6 sm:-mx-8 px-6 sm:px-8">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4 py-8" onClick={(event) => event.target === event.currentTarget && closeEditSubmission()}>
+          <div className="max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-[2rem] border border-slate-700 bg-slate-950/95 p-8 shadow-2xl shadow-black/40">
+            <div className="flex items-start justify-between gap-4">
               <div>
                 <p className="text-sm uppercase tracking-[0.3em] text-orange-300">Edit submission</p>
                 <h3 className="mt-3 text-2xl font-bold text-white">{editingSubmission.taskTitle}</h3>
                 <p className="mt-2 text-sm text-slate-400">Update the work you sent for this task.</p>
               </div>
-              <button type="button" onClick={closeEditSubmission} className="text-3xl text-slate-400 flex-shrink-0">x</button>
+              <button type="button" onClick={closeEditSubmission} className="text-3xl text-slate-400">x</button>
             </div>
 
             <div className="mt-6 space-y-5">
@@ -1000,7 +989,7 @@ export default function Student({ user }) {
                     key={type}
                     type="button"
                     onClick={() => setEditSubmitTab(type)}
-                    className={`rounded-full px-4 py-2 text-sm font-semibold transition ${editSubmitTab === type ? 'bg-orange-500 text-slate-950' : 'bg-slate-800 text-slate-300 hover:bg-slate-700[...]
+                    className={`rounded-full px-4 py-2 text-sm font-semibold transition ${editSubmitTab === type ? 'bg-orange-500 text-slate-950' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'}`}
                   >
                     {type === 'link' ? 'Link' : type === 'text' ? 'Text' : 'File'}
                   </button>
@@ -1024,11 +1013,11 @@ export default function Student({ user }) {
                 <div className="space-y-2">
                   <label className="block text-sm font-medium text-slate-300">Submission details</label>
                   <textarea
-                    rows={3}
+                    rows={5}
                     value={editTextValue}
                     onChange={(e) => setEditTextValue(e.target.value)}
                     placeholder="Describe your work and what you submitted."
-                    className="w-full rounded-2xl border border-slate-700 bg-slate-900 px-4 py-3 text-slate-100 outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-400/20 resize-none"
+                    className="w-full rounded-2xl border border-slate-700 bg-slate-900 px-4 py-3 text-slate-100 outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-400/20"
                   />
                 </div>
               )}
@@ -1036,16 +1025,16 @@ export default function Student({ user }) {
               {editSubmitTab === 'file' && (
                 <div className="space-y-3">
                   <label className="block text-sm font-medium text-slate-300">Submitted files</label>
-                  <label className="inline-flex w-full cursor-pointer items-center justify-center rounded-2xl border border-dashed border-slate-700 bg-slate-950 px-4 py-6 text-center text-slate-[...]
+                  <label className="inline-flex w-full cursor-pointer items-center justify-center rounded-2xl border border-dashed border-slate-700 bg-slate-950 px-4 py-6 text-center text-slate-400 transition hover:border-orange-400 hover:bg-slate-900">
                     <input type="file" multiple className="sr-only" onChange={handleEditFileSelect} />
                     Add files
                   </label>
                   <p className="text-xs text-slate-400">File size must not exceed 20 MB.</p>
-                  <div className="space-y-2 max-h-32 overflow-y-auto">
+                  <div className="space-y-2">
                     {editSelectedFiles.map((file, index) => (
                       <div key={`${file.name}-${index}`} className="flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-slate-900 px-4 py-3 text-sm text-slate-300">
                         <span className="break-all">{file.name}</span>
-                        <div className="flex gap-3 flex-shrink-0">
+                        <div className="flex gap-3">
                           {file.dataUrl ? (
                             <a href={file.dataUrl} target="_blank" rel="noreferrer" className="text-orange-300 hover:text-orange-200">
                               View
@@ -1061,7 +1050,7 @@ export default function Student({ user }) {
                 </div>
               )}
 
-              <div className="flex flex-wrap gap-3 sticky bottom-0 bg-slate-950/95 pt-4 -mx-6 sm:-mx-8 px-6 sm:px-8 pb-0">
+              <div className="flex flex-wrap gap-3">
                 <button
                   type="button"
                   disabled={savingEdit}
@@ -1167,7 +1156,7 @@ export default function Student({ user }) {
                 type="button"
                 disabled={deletingSubmissionId === viewingSubmission.id}
                 onClick={() => deleteSubmissionEntry(viewingSubmission)}
-                className="rounded-2xl border border-red-500/40 bg-red-500/10 px-5 py-3 text-sm font-semibold text-red-200 transition hover:bg-red-500/20 disabled:cursor-not-allowed disabled:opa[...]
+                className="rounded-2xl border border-red-500/40 bg-red-500/10 px-5 py-3 text-sm font-semibold text-red-200 transition hover:bg-red-500/20 disabled:cursor-not-allowed disabled:opacity-70"
               >
                 {deletingSubmissionId === viewingSubmission.id ? 'Deleting...' : 'Delete'}
               </button>
