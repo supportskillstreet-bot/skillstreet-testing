@@ -81,7 +81,7 @@ export default function Home() {
                 const about = document.getElementById('about');
                 if (about) about.scrollIntoView({ behavior: 'smooth', block: 'start' });
               }}
-              className="btn-glass w-full rounded-xl px-8 py-4 font-bold text-white md:w-auto"
+              className="rounded-full bg-orange-500/10 border border-orange-500/30 px-8 py-4 font-bold text-orange-300 hover:bg-orange-500/20 transition-all w-full md:w-auto"
             >
               Our Mission
             </button>
@@ -161,7 +161,7 @@ export default function Home() {
 
           <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
             <div className="space-y-6">
-              <div className="p-8 rounded-[2rem] bg-white/5 border border-white/10 backdrop-blur-sm shadow-[0_18px_60px_rgba(0,0,0,0.35)] hover:shadow-[0_22px_80px_rgba(0,0,0,0.45)] transition-shadow duration-300">
+              <div className="p-8 rounded-[2rem] bg-white/5 border border-white/10 backdrop-blur-sm shadow-[0_18px_60px_rgba(0,0,0,0.35)] hover:shadow-[0_22px_80px_rgba(0,0,0,0.45)] transition-shadow [...]
                 <h3 className="text-2xl font-bold mb-4 text-orange-400">How It Started</h3>
 
                 <p className="text-slate-300 leading-relaxed mb-4">
@@ -172,29 +172,29 @@ export default function Home() {
                 </p>
               </div>
 
-              <div className="p-8 rounded-[2rem] bg-orange-500/10 border border-orange-400/20 shadow-[0_18px_60px_rgba(0,0,0,0.35)] hover:shadow-[0_22px_80px_rgba(0,0,0,0.45)] transition-shadow duration-300">
+              <div className="p-8 rounded-[2rem] bg-orange-500/10 border border-orange-400/20 shadow-[0_18px_60px_rgba(0,0,0,0.35)] hover:shadow-[0_22px_80px_rgba(0,0,0,0.45)] transition-shadow durati[...]
                 <h3 className="text-2xl font-bold mb-4 text-white">What We Wanted To Change</h3>
                 <p className="text-slate-200 leading-relaxed">
-                  We wanted to fix one broken experience: internships. Too many students faced unclear roles, unpaid work, and broken promises. SkillStreet was built to bring clarity, accountability, and real-world execution into internships.
+                  We wanted to fix one broken experience: internships. Too many students faced unclear roles, unpaid work, and broken promises. SkillStreet was built to bring clarity, accountability, [...]
                 </p>
               </div>
             </div>
 
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-1">
-              <div className="p-6 rounded-3xl bg-blue-900/60 border border-blue-800/60 shadow-[0_18px_60px_rgba(0,0,0,0.35)] hover:shadow-[0_22px_80px_rgba(0,0,0,0.45)] transition-shadow duration-300">
+              <div className="p-6 rounded-3xl bg-blue-900/60 border border-blue-800/60 shadow-[0_18px_60px_rgba(0,0,0,0.35)] hover:shadow-[0_22px_80px_rgba(0,0,0,0.45)] transition-shadow duration-300"[...]
                 <h4 className="text-xl font-bold mb-3 text-white">Vision</h4>
 
                 <p className="text-slate-300 text-sm leading-relaxed">Make real opportunities accessible to every student regardless of background.</p>
               </div>
-              <div className="p-6 rounded-3xl bg-blue-900/60 border border-blue-800/60 shadow-[0_18px_60px_rgba(0,0,0,0.35)] hover:shadow-[0_22px_80px_rgba(0,0,0,0.45)] transition-shadow duration-300">
+              <div className="p-6 rounded-3xl bg-blue-900/60 border border-blue-800/60 shadow-[0_18px_60px_rgba(0,0,0,0.35)] hover:shadow-[0_22px_80px_rgba(0,0,0,0.45)] transition-shadow duration-300"[...]
                 <h4 className="text-xl font-bold mb-3 text-white">Struggle</h4>
 
                 <p className="text-slate-300 text-sm leading-relaxed">No funding. No shortcuts. Just belief and relentless execution.</p>
               </div>
-              <div className="p-6 rounded-3xl bg-blue-900/60 border border-blue-800/60 sm:col-span-2 lg:col-span-1 shadow-[0_18px_60px_rgba(0,0,0,0.35)] hover:shadow-[0_22px_80px_rgba(0,0,0,0.45)] transition-shadow duration-300">
+              <div className="p-6 rounded-3xl bg-blue-900/60 border border-blue-800/60 sm:col-span-2 lg:col-span-1 shadow-[0_18px_60px_rgba(0,0,0,0.35)] hover:shadow-[0_22px_80px_rgba(0,0,0,0.45)] tra[...]
                 <h4 className="text-xl font-bold mb-3 text-white">Outcome</h4>
 
-                <p className="text-slate-300 text-sm leading-relaxed">Today, SkillStreet is building a system where learning leads to action, and action leads to careers. And this is only the beginning.</p>
+                <p className="text-slate-300 text-sm leading-relaxed">Today, SkillStreet is building a system where learning leads to action, and action leads to careers. And this is only the beginnin[...]
               </div>
             </div>
           </div>
@@ -204,21 +204,21 @@ export default function Home() {
       <section id="why" className="py-24 text-center bg-white border-y border-zinc-900 px-4 sm:px-6">
         <h2 className="mb-16 text-4xl font-bold text-blue-950">Why <span className="accent-text">SkillStreet?</span></h2>
           <div className="grid md:grid-cols-3 gap-12 max-w-5xl mx-auto">
-        <div className="p-8 rounded-2xl border border-white/5 bg-blue-900 shadow-[0_18px_60px_rgba(0,0,0,0.15)] hover:shadow-[0_22px_80px_rgba(0,0,0,0.35)] hover:border-indigo-500/30 transition-all hover:bg-blue-800">
+        <div className="p-8 rounded-2xl border border-white/5 bg-blue-900 shadow-[0_18px_60px_rgba(0,0,0,0.15)] hover:shadow-[0_22px_80px_rgba(0,0,0,0.35)] hover:border-indigo-500/30 transition-all ho[...]
             <div className="w-12 h-12 bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-6 text-xl">
               <i className="fas fa-bolt accent-icon"></i>
             </div>
             <h3 className="text-white text-xl font-bold mb-3">Real Skills</h3>
             <p className="text-white text-sm leading-relaxed">No theory. Only practical execution. We focus on results that matter in the real world.</p>
           </div>
-          <div className="p-8 rounded-2xl border border-white/5 hover:border-purple-500/30 transition-all bg-blue-900 shadow-[0_18px_60px_rgba(0,0,0,0.15)] hover:shadow-[0_22px_80px_rgba(0,0,0,0.35)] hover:bg-blue-800">
+          <div className="p-8 rounded-2xl border border-white/5 hover:border-purple-500/30 transition-all bg-blue-900 shadow-[0_18px_60px_rgba(0,0,0,0.15)] hover:shadow-[0_22px_80px_rgba(0,0,0,0.35)] [...]
             <div className="w-12 h-12 bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-6 text-xl">
               <i className="fas fa-graduation-cap accent-icon"></i>
             </div>
             <h3 className="text-white text-xl font-bold mb-3">Student Friendly</h3>
             <p className="text-white text-sm leading-relaxed">Built for learners, not just professionals. Simple, accessible, and high impact.</p>
           </div>
-          <div className="p-8 rounded-2xl border border-white/5 hover:border-cyan-500/30 transition-all bg-blue-900  shadow-[0_18px_60px_rgba(0,0,0,0.15)] hover:shadow-[0_22px_80px_rgba(0,0,0,0.35)] hover:bg-blue-800">
+          <div className="p-8 rounded-2xl border border-white/5 hover:border-cyan-500/30 transition-all bg-blue-900  shadow-[0_18px_60px_rgba(0,0,0,0.15)] hover:shadow-[0_22px_80px_rgba(0,0,0,0.35)] h[...]
             <div className="w-12 h-12 bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-6 text-xl">
               <i className="fas fa-rocket accent-icon"></i>
             </div>
@@ -239,7 +239,7 @@ export default function Home() {
               </div>
               <h3 className="text-xl font-semibold mb-1">Hanu Pandey</h3>
               <p className="text-orange-300 text-xs font-medium mb-4 uppercase tracking-wider">Founder</p>
-              <a href="https://www.linkedin.com/in/hanu-pandey-827b05312" target="_blank" rel="noreferrer" className="inline-flex items-center justify-center px-6 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-full text-sm font-bold transition-all">
+              <a href="https://www.linkedin.com/in/hanu-pandey-827b05312" target="_blank" rel="noreferrer" className="inline-flex items-center justify-center px-6 py-2 bg-orange-600 hover:bg-orange-70[...]
                 LinkedIn <i className="fab fa-linkedin ml-2"></i>
               </a>
             </div>
@@ -249,7 +249,7 @@ export default function Home() {
               </div>
               <h3 className="text-xl font-semibold mb-1">Ganesh Mishra</h3>
               <p className="text-orange-300 text-xs font-weight-600 mb-4 uppercase tracking-wider">Co-Founder</p>
-              <a href="https://www.linkedin.com/in/ganesh-mishra-287546246" target="_blank" rel="noreferrer" className="inline-flex items-center justify-center px-6 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-full text-sm font-bold transition-all">
+              <a href="https://www.linkedin.com/in/ganesh-mishra-287546246" target="_blank" rel="noreferrer" className="inline-flex items-center justify-center px-6 py-2 bg-orange-600 hover:bg-orange-[...]
                 LinkedIn <i className="fab fa-linkedin ml-2"></i>
               </a>
             </div>
